@@ -209,7 +209,6 @@ const array = [
   }
 ]
 
-
 var currentFatherID = undefined;
 var avatarFolder = 'starwars/assets/avatars/';
 var backButton = document.getElementsByClassName('back')[0];
@@ -219,12 +218,6 @@ var currentFather = document.getElementsByClassName('father');
 var currentFatherAvatar = document.getElementsByClassName('father__avatar');
 var currentFatherName = document.getElementsByClassName('father__name');
 var currentFatherPost = document.getElementsByClassName('father__post');
-var currentChild = document.getElementsByClassName('currentChild');
-
-currentChild.onclick = function(){
-  alert("click");
-}
-
 
 if (currentFatherID === undefined){
   backButton.className += ' hidden';
@@ -232,7 +225,7 @@ if (currentFatherID === undefined){
   rightArrow.className += ' hidden';
 }
 
-childCounter = function(currentFatherID){
+childCounter = function(){
   var childCount = 0;
   for (let i = 0; i < array.length - 1; i++){
       if (currentFatherID == array[i].parent){
@@ -240,53 +233,6 @@ childCounter = function(currentFatherID){
       }
     }
   return childCount;
-}
-
-function changeFather(array){
-  for (let i = 0; i < array.length - 1; i++) {
-    leftArrow.onclick = function(){
-      i--;
-      console.log(array[i]);
-      if (array[i].id = 30) {
-        i = 0;
-        console.log(array[i]);
-      }
-    }
-    rightArrow.onclick = function(){
-      i++;
-      console.log(array[i]);
-      if (array[i].id = 0) {
-        i = array.length - 1;
-        console.log(array[i]);
-      }
-    }
-  }
-}
-
-getFatherParams =  function() {
-  for (let i = 0; i < array.length - 1; i++){
-    if (array[i].id == currentFatherID){
-      return {
-        name: array[i].name,
-        post: array[i].post,
-        image: array[i].image
-      }
-    }else if (currentFatherID == undefined){
-      return {
-        name: 'Galactic Empire',
-        post: 'Imperial military',
-        image: 'empire.png'
-      }
-    }
-  }
-}
-
-function showFather() {
-  currentFatherAvatar[0].style.backgroundImage = "url('" + avatarFolder
-                                                       + getFatherParams().image
-                                                       + "')";
-  currentFatherName[0].innerHTML = getFatherParams().name;
-  currentFatherPost[0].innerHTML = getFatherParams().post;
 }
 
 childArray = function(){
@@ -305,6 +251,30 @@ childArray = function(){
     }
   }
   return childArray;
+}
+
+getFatherParams =  function() {
+  for (let i = 0; i < array.length; i++){
+    if (array[i].id == currentFatherID){
+      return {
+        name: array[i].name,
+        post: array[i].post,
+        image: array[i].image
+      }
+    }else if (currentFatherID == undefined){
+      return {
+        name: 'Galactic Empire',
+        post: 'Imperial military',
+        image: 'empire.png'
+      }
+    }
+  }
+}
+
+function showFather() {
+  currentFatherAvatar[0].style.backgroundImage = "url('" + avatarFolder + getFatherParams().image + "')";
+  currentFatherName[0].innerHTML = getFatherParams().name;
+  currentFatherPost[0].innerHTML = getFatherParams().post;
 }
 
 subChildsCount = function(fatherID){
@@ -326,7 +296,7 @@ function createChilds(array){
     list.remove();
   }
 
-  for(let i = 0; i < childCounter(currentFatherID); i++){
+  for(let i = 0; i < childCounter(); i++){
     var li = document.createElement('li');
     var avatar = document.createElement('div');
     var name = document.createElement('h2');
@@ -336,16 +306,16 @@ function createChilds(array){
     list.appendChild(li);
 
     avatar.className = 'avatar'
-    avatar.style.backgroundImage = "url('" + avatarFolder
-                                         + array[i].image
-                                         + "')";
+    avatar.style.backgroundImage = "url('" + avatarFolder + array[i].image + "')";
     li.appendChild(avatar);
+
     if (subChildsCount(array[i].id) !== 0){
       var subChildCount = document.createElement('div');
       subChildCount.className = 'subChildCount'
       subChildCount.innerHTML = `${subChildsCount(array[i].id)}`;
       li.appendChild(subChildCount);
     }
+
     name.className = 'name'
     name.innerHTML = `${array[i].name}`;
     li.appendChild(name);
@@ -358,5 +328,25 @@ function createChilds(array){
 
 showFather();
 createChilds(childArray());
+var currentChild = document.getElementsByClassName('currentChild');
 
 
+for(let i = 0; i < childCounter(); i++){
+  currentChild[i].onclick = function(){
+    console.log('click ' + i);
+  }
+}
+
+
+// getChildID = function(childArray){
+//   for(let i = 0; i < childArray.length - 1; i++){
+    
+//     return childArray[i].id;
+//   }
+// }
+
+// console.log(getChildID(childArray));
+
+// currentFatherID = getChildID(childArray);
+
+// console.log(currentFatherID);
