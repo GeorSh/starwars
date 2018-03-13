@@ -1,0 +1,218 @@
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+}
+/* 
+#808080
+#ffffff
+#ff0000 */
+
+
+a {
+  text-decoration: none;
+  color: #808080; 
+  font-size: 18px;
+}
+
+a:hover {
+  color: #ffffff; 
+}
+
+.main__space {
+  position: relative;
+  min-height: 1024px;
+  width: 100%;
+  background-image: url('starwars/assets/background/bg.png');
+  background-size: cover;
+  background-position: 100% 100%;
+}
+
+.stars {
+  position: relative;
+  min-height: 1024px;
+  width: 100%;
+  background-image: url('starwars/assets/background/stars.png');
+  background-size: cover;
+  background-position: 100% 100%;
+}
+
+.control__panel {
+  position: relative;
+  height: 660px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.header {
+  height: 50px;
+  width: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  /* margin: 0 auto; */
+}
+
+.logo {
+  margin: 0 auto;
+  width: 115px;
+  height: 50px;
+}
+
+.father {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 350px;
+  height: 360px;
+}
+
+.father__avatar {
+  width: 220px;
+  height: 220px;
+  background-size: contain;
+  border-radius: 50%;
+  border: 3px solid #ffffff;
+}
+
+.father__name {
+  margin-top: 25px;
+  color: #ffffff;
+  font-size: 31px;
+  text-align: center;
+}
+
+.father__post {
+  margin-top: 10px;
+  color: #808080;
+  font-size: 18px;
+  text-align: center;
+}
+
+.arrows {
+  position: relative;
+  top: -185px;
+  width: 70%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.arrows__left {
+  width: 65px;
+  height: 65px;
+  cursor: pointer;
+  stroke: #ffffff;
+}
+
+.arrows__left:hover {
+  stroke: #808080;
+}
+
+.arrows__right {
+  cursor: pointer;
+  width: 65px;
+  height: 65px;
+  transform: rotate(-180deg);
+  stroke: #ffffff;
+}
+
+.arrows__right:hover {
+  stroke: #808080;
+}
+
+.circle {
+  position: relative;
+  top: 20px;
+  height: 100px;
+  width: 200vw;
+}
+
+.hidden {
+  display: none;
+}
+
+.childs {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+  max-width: 1000px;
+  flex-wrap: wrap;
+}
+
+.currentChild {
+  display: inline-block;
+  width: 400px;
+  height: 135px;
+  margin-bottom: 60px;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  position: absolute;
+  background-size: cover;
+}
+
+.currentChild h2 {
+  color: #ffffff;
+  font-size: 25px;
+  margin-left: 165px;
+}
+
+.currentChild p {
+  color: #808080;
+  font-size: 15px;
+  margin-left: 165px;
+  margin-top: 22px;
+}
+
+.currentChild:hover > .avatar {
+  background-color: rgba(0, 0, 0, .5);
+  background-blend-mode: multiply;
+}
+
+.currentChild:hover > h2 {
+  cursor: pointer;
+  color: #ff0000;
+}
+
+.currentChild:hover > p {
+  color: #ffffff;
+}
+
+
+
+.subChildCount {
+  display: block;
+  position: relative;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: #ff0000;
+  text-align: center;
+  font-size: 18px;
+  color: #ffffff;
+  line-height: 35px;
+}
+
+@media screen and (max-width: 1050px) {
+  .childs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    /* margin: 0 auto; */
+    /* width: 80%; */
+  }
+}
+/* .control__panel {
+  position: relative;
+  height: 390px;
+  width: 100%;
+  top: -50%;
+} */
