@@ -242,7 +242,7 @@ parentCounter = function(){
 childCounter = function(){
   var childCount = 0;
   for (let i = 0; i < array.length; i++){
-      if (currentFatherID == undefined){
+      if (currentFatherID == 0){
         childCount = 2;
       } else if (currentFatherID == array[i].parent){
         childCount++;
@@ -266,7 +266,7 @@ var subArray = [];
 }
 
 function showFather(elem) {
-  if (currentFatherID == undefined){
+  if (currentFatherID == 0){
     currentFatherAvatar[0].style.backgroundImage = "url('" + avatarFolder + "empire.png" + "')";
     currentFatherName[0].innerHTML = 'Galactic Empire';
     currentFatherPost[0].innerHTML = 'Imperial military';
@@ -278,7 +278,7 @@ function showFather(elem) {
 }
 
 function hiddenCheck() {
-  if (currentFatherID === undefined){
+  if (currentFatherID == 0){
     backButton.className += ' hidden';
     leftArrow.className += ' hidden';
     rightArrow.className += ' hidden';
@@ -314,6 +314,8 @@ function createChilds(array){
       var avatar = document.createElement('div');
       var name = document.createElement('h2');
       var post = document.createElement('p');
+
+      console.log(array[i])
 
       li.className = 'currentChild'
       list.appendChild(li);
@@ -363,31 +365,19 @@ function backClick(){
 function starwars(){
   var father = 0;
   var childs = 0;
-  currentFatherID = undefined;
+  currentFatherID = 0;
   hiddenCheck();
   showFather();
   createChilds(subArray[childs]);
   var childArray = document.getElementsByClassName('currentChild');
-  // console.log(childArray.length);
-  while(childArray.length != 2){
-
+  var currentfatherArray = childArray;
+  for(let i = 0; i < currentfatherArray.length; i++){
+    childArray[i].onclick = function(){
+      alert('click' + i);
+    }
   }
-  // for(let i = 0; i < childArray.length; i++){
-  //   childArray[i].onclick = function(){
-  //     console.log(childArray.length);
-  //     currentFatherID = subArray[father][i].id;
-  //     alert('click' + currentFatherID)
-  //     hiddenCheck();
-  //     showFather(subArray[father][i]);
-  //     createChilds(subArray[currentFatherID])
-  //   }
-  // }
-  // while(){
-  //   var currentChild = document.getElementsByClassName('currentChild');
-  //   currentFatherID = childClick(currentChild, father);
-  //   backClick()
-  // }
 }
+
 
 
 
