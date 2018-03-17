@@ -219,62 +219,76 @@ var currentFatherAvatar = document.getElementsByClassName('father__avatar');
 var currentFatherName = document.getElementsByClassName('father__name');
 var currentFatherPost = document.getElementsByClassName('father__post');
 
-if (currentFatherID === undefined){
-  backButton.className += ' hidden';
-  leftArrow.className += ' hidden';
-  rightArrow.className += ' hidden';
+function getElementParams(elem) {
+  return {
+    id: elem.id,
+    name: elem.name,
+    post: elem.post,
+    image: elem.image,
+    parent: elem.parent
+  }
+}
+
+parentCounter = function(){
+  var parentCount = 0;
+  for (let i = 1; i < array.length; i++){
+    if(array[i].parent != array[i - 1].parent){
+      parentCount++;
+    }
+  }
+  return parentCount;
 }
 
 childCounter = function(){
   var childCount = 0;
-  for (let i = 0; i < array.length - 1; i++){
-      if (currentFatherID == array[i].parent){
+  for (let i = 0; i < array.length; i++){
+      if (currentFatherID == undefined){
+        childCount = 2;
+      } else if (currentFatherID == array[i].parent){
         childCount++;
       }
     }
   return childCount;
 }
 
-childArray = function(){
-  childArray = new Array(childCounter(currentFatherID));
-  var j = 0;
-  for (let i = 0; i < array.length - 1; i++){
-    if(array[i].parent == currentFatherID){
-      childArray[j] = {
-        id: array[i].id,
-        name: array[i].name,
-        post: array[i].post,
-        image: array[i].image,
-        parent: array[i].parent
+var subArray = [];
+  for (let i = 0; i < parentCounter(); i++){
+  subArray[i] = [];
+    for (let j = 0; j < childCounter();){
+      for(let k = 0; k < array.length; k++){
+        if(array[k].parent == currentFatherID){
+          subArray[i][j] = getElementParams(array[k]);
+          j++;
+        }
       }
-      j++;
     }
-  }
-  return childArray;
+  currentFatherID = i + 1;
 }
 
-getFatherParams =  function() {
-  for (let i = 0; i < array.length; i++){
-    if (array[i].id == currentFatherID){
-      return {
-        name: array[i].name,
-        post: array[i].post,
-        image: array[i].image
-      }
-    }else if (currentFatherID == undefined){
-      return {
-        name: 'Galactic Empire',
-        post: 'Imperial military',
-        image: 'empire.png'
-      }
-    }
+function showFather(elem) {
+  if (currentFatherID == undefined){
+    currentFatherAvatar[0].style.backgroundImage = "url('" + avatarFolder + "empire.png" + "')";
+    currentFatherName[0].innerHTML = 'Galactic Empire';
+    currentFatherPost[0].innerHTML = 'Imperial military';
+  } else{
+    currentFatherAvatar[0].style.backgroundImage = "url('" + avatarFolder + getElementParams(elem).image + "')";
+    currentFatherName[0].innerHTML = getElementParams(elem).name;
+    currentFatherPost[0].innerHTML = getElementParams(elem).post;
   }
 }
 
-function showFather() {
-  currentFatherAvatar[0].style.backgroundImage = "url('" + avatarFolder + getFatherParams().image + "')";
-  currentFatherName[0].innerHTML = getFatherParams().name;
-  currentFatherPost[0].innerHTML = getFatherParams().post;
+function hiddenCheck() {
+  if (currentFatherID === undefined){
+    backButton.className += ' hidden';
+    leftArrow.className += ' hidden';
+    rightArrow.className += ' hidden';
+    return false;
+  } else {
+    backButton.className = 'back';
+    leftArrow.className = 'arrows__left';
+    rightArrow.className = 'arrows__right';
+    return true;
+  }
 }
 
 subChildsCount = function(fatherID){
@@ -294,59 +308,87 @@ function createChilds(array){
 
   if (array == null){
     list.remove();
-  }
+  } else {
+    for(let i = 0; i < array.length; i++){
+      var li = document.createElement('li');
+      var avatar = document.createElement('div');
+      var name = document.createElement('h2');
+      var post = document.createElement('p');
 
-  for(let i = 0; i < childCounter(); i++){
-    var li = document.createElement('li');
-    var avatar = document.createElement('div');
-    var name = document.createElement('h2');
-    var post = document.createElement('p');
+      li.className = 'currentChild'
+      list.appendChild(li);
 
-    li.className = 'currentChild'
-    list.appendChild(li);
+      avatar.className = 'avatar'
+      avatar.style.backgroundImage = "url('" + avatarFolder + array[i].image + "')";
+      li.appendChild(avatar);
 
-    avatar.className = 'avatar'
-    avatar.style.backgroundImage = "url('" + avatarFolder + array[i].image + "')";
-    li.appendChild(avatar);
+      if (subChildsCount(array[i].id) !== 0){
+        var subChildCount = document.createElement('div');
+        subChildCount.className = 'subChildCount'
+        subChildCount.innerHTML = `${subChildsCount(array[i].id)}`;
+        li.appendChild(subChildCount);
+      }
 
-    if (subChildsCount(array[i].id) !== 0){
-      var subChildCount = document.createElement('div');
-      subChildCount.className = 'subChildCount'
-      subChildCount.innerHTML = `${subChildsCount(array[i].id)}`;
-      li.appendChild(subChildCount);
+      name.className = 'name'
+      name.innerHTML = `${array[i].name}`;
+      li.appendChild(name);
+      post.className = 'post'
+      post.innerHTML = `${array[i].post}`;
+      li.appendChild(post);
     }
-
-    name.className = 'name'
-    name.innerHTML = `${array[i].name}`;
-    li.appendChild(name);
-    post.className = 'post'
-    post.innerHTML = `${array[i].post}`;
-    li.appendChild(post);
   }
 }
 
+console.log(subArray);
 
-showFather();
-createChilds(childArray());
-var currentChild = document.getElementsByClassName('currentChild');
+function childClick(childArray, father){
+  for(let i = 0; i < childArray.length; i++){
+    childArray[i].onclick = function(){
+      currentFatherID = subArray[father][i].id;
+      alert('click' + currentFatherID)
+      hiddenCheck();
+      showFather(subArray[father][i]);
+      createChilds(subArray[currentFatherID])
+    }
+  }
+  return currentFatherID;
+}
 
-
-for(let i = 0; i < childCounter(); i++){
-  currentChild[i].onclick = function(){
-    console.log('click ' + i);
+function backClick(){
+  backButton.onclick = function(){
+    currentFatherID--;
   }
 }
 
+function starwars(){
+  var father = 0;
+  var childs = 0;
+  currentFatherID = undefined;
+  hiddenCheck();
+  showFather();
+  createChilds(subArray[childs]);
+  var childArray = document.getElementsByClassName('currentChild');
+  // console.log(childArray.length);
+  while(childArray.length != 2){
 
-// getChildID = function(childArray){
-//   for(let i = 0; i < childArray.length - 1; i++){
-    
-//     return childArray[i].id;
-//   }
-// }
+  }
+  // for(let i = 0; i < childArray.length; i++){
+  //   childArray[i].onclick = function(){
+  //     console.log(childArray.length);
+  //     currentFatherID = subArray[father][i].id;
+  //     alert('click' + currentFatherID)
+  //     hiddenCheck();
+  //     showFather(subArray[father][i]);
+  //     createChilds(subArray[currentFatherID])
+  //   }
+  // }
+  // while(){
+  //   var currentChild = document.getElementsByClassName('currentChild');
+  //   currentFatherID = childClick(currentChild, father);
+  //   backClick()
+  // }
+}
 
-// console.log(getChildID(childArray));
 
-// currentFatherID = getChildID(childArray);
 
-// console.log(currentFatherID);
+starwars();
