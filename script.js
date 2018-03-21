@@ -239,12 +239,12 @@ parentCounter = function(){
   return parentCount;
 }
 
-childCounter = function(){
+childCounter = function(fatherID){
   var childCount = 0;
   for (let i = 0; i < array.length; i++){
-      if (currentFatherID == 0){
+      if (fatherID == 0){
         childCount = 2;
-      } else if (currentFatherID == array[i].parent){
+      } else if (fatherID == array[i].parent){
         childCount++;
       }
     }
@@ -252,21 +252,24 @@ childCounter = function(){
 }
 
 var subArray = [];
-  for (let i = 0; i < parentCounter(); i++){
+var fatherID = undefined;
+for (let i = 0; i < parentCounter(); i++){
   subArray[i] = [];
-    for (let j = 0; j < childCounter();){
+    for (let j = 0; j < childCounter(i);){
       for(let k = 0; k < array.length; k++){
-        if(array[k].parent == currentFatherID){
+        if(array[k].parent == fatherID){
           subArray[i][j] = getElementParams(array[k]);
           j++;
         }
       }
     }
-  currentFatherID = i + 1;
+  fatherID = i + 1;
 }
 
+console.log(subArray);
+
 function showFather(elem) {
-  if (currentFatherID == 0){
+  if (elem == null){
     currentFatherAvatar[0].style.backgroundImage = "url('" + avatarFolder + "empire.png" + "')";
     currentFatherName[0].innerHTML = 'Galactic Empire';
     currentFatherPost[0].innerHTML = 'Imperial military';
@@ -302,11 +305,9 @@ subChildsCount = function(fatherID){
 }
 
 function createChilds(array){
-  var list = document.getElementsByClassName('childs')[0];
-
-  console.log(array);
-
-  if (array == null){
+  console.log(array.length);
+  var list = document.querySelector('.childs');
+  if (array == undefined){
     list.remove();
   } else {
     for(let i = 0; i < array.length; i++){
@@ -314,8 +315,6 @@ function createChilds(array){
       var avatar = document.createElement('div');
       var name = document.createElement('h2');
       var post = document.createElement('p');
-
-      console.log(array[i])
 
       li.className = 'currentChild'
       list.appendChild(li);
@@ -341,44 +340,55 @@ function createChilds(array){
   }
 }
 
-console.log(subArray);
 
-function childClick(childArray, father){
-  for(let i = 0; i < childArray.length; i++){
-    childArray[i].onclick = function(){
-      currentFatherID = subArray[father][i].id;
-      alert('click' + currentFatherID)
-      hiddenCheck();
-      showFather(subArray[father][i]);
-      createChilds(subArray[currentFatherID])
-    }
-  }
-  return currentFatherID;
-}
-
-function backClick(){
-  backButton.onclick = function(){
-    currentFatherID--;
-  }
-}
 
 function starwars(){
-  var father = 0;
-  var childs = 0;
+  var fatherIndex = 0;
   currentFatherID = 0;
   hiddenCheck();
   showFather();
-  createChilds(subArray[childs]);
-  var childArray = document.getElementsByClassName('currentChild');
-  var currentfatherArray = childArray;
-  for(let i = 0; i < currentfatherArray.length; i++){
-    childArray[i].onclick = function(){
-      alert('click' + i);
+  createChilds(subArray[currentFatherID]);
+  var previosFatherID;
+  var currentChild = document.getElementsByClassName('currentChild');
+  for (let i = 0; i < currentChild.length; i++){
+    currentChild[i].onclick = function(){
+      showFather(subArray[currentFatherID][i]);
+      previosFatherID = currentFatherID;
+      currentFatherID = subArray[currentFatherID][0].id;
+      hiddenCheck();
+      // createChilds(subArray[currentFatherID]);
+      // currentChild = document.getElementsByClassName('currentChild');
+    }
+  }
+  backButton.onclick = function(){
+    currentFatherID = previosFatherID;
+    if (currentFatherID == 0){
+      showFather();
+      // createChilds(subArray[currentFatherID]);
+    } else {
+      showFather(subArray[currentFatherID][fatherIndex]);
+      // createChilds(subArray[currentFatherID]);
+    }
+    hiddenCheck();
+  }
+  rightArrow.onclick = function(){
+    if (fatherIndex == currentChild.length - 1){
+      fatherIndex = 0;
+      showFather(subArray[previosFatherID][fatherIndex]);
+    } else {
+      fatherIndex++;
+      showFather(subArray[previosFatherID][fatherIndex]);
+    }
+  }
+  leftArrow.onclick = function() {
+    if (fatherIndex == 0){
+      fatherIndex = currentChild.length - 1;
+      showFather(subArray[previosFatherID][fatherIndex]);
+    } else {
+      fatherIndex--;
+      showFather(subArray[previosFatherID][fatherIndex]);
     }
   }
 }
-
-
-
 
 starwars();
